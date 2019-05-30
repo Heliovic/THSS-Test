@@ -48,7 +48,8 @@ vector<edge> edges;
 vector<int> graph[MAX_N];
 
 bool vis[MAX_N];
-int dis[MAX_N];
+int dis1[MAX_N];
+int disN[MAX_N];
 
 void add_edge(int s, int t, int d)
 {
@@ -63,7 +64,7 @@ void add_edge(int s, int t, int d)
 	graph[t].push_back(edges.size() - 1);
 }
 
-void dijkstra(int u)
+void dijkstra(int u, int* dis)
 {
 	fill_n(dis, MAX_N, INT_MAX);
 	fill_n(vis, MAX_N, false);
@@ -112,21 +113,21 @@ int main()
 
 	int ans_t = INT_MAX;
 	int ans_e = -1;
+	dijkstra(1, dis1);
+	dijkstra(N, disN);
 
 	for (int i = 0; i < edges.size(); i++)
 	{
-		int bk = edges[i].d;
-		edges[i].d /= 2;
-		dijkstra(1);
-		if (dis[N] < ans_t)
+		edge e = edges[i];
+		if (dis1[e.s] + disN[e.t] + e.d / 2 < ans_t)
 		{
-			ans_t = dis[N];
 			ans_e = i;
+			ans_t = dis1[e.s] + disN[e.t] + e.d / 2;
 		}
-		edges[i].d = bk;
+		
 	}
 
-	printf("%d %d", ans_e, ans_t);
+	printf("%d %d", ans_e / 2, ans_t);
 
 	return 0;
 }
